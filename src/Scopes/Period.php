@@ -4,11 +4,11 @@ namespace Sofa\EloquentScopes\Scopes;
 
 use Carbon\Carbon;
 use InvalidArgumentException;
-use Sofa\GlobalScope\GlobalScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ScopeInterface;
 
-class Period extends GlobalScope
+class Period implements ScopeInterface
 {
     /**
      * Apply the scope to a given Eloquent query builder.
@@ -20,18 +20,6 @@ class Period extends GlobalScope
     public function apply(Builder $query, Model $model)
     {
         $this->extend($query, $model);
-    }
-
-    /**
-     * Determine whether where clause is the contraint applied by this scope.
-     *
-     * @param  array  $where Single element from the Query\Builder::$wheres array.
-     * @param  \Illuminate\Database\Eloquent\Model $model
-     * @return boolean
-     */
-    public function isScopeConstraint(array $where, Model $model)
-    {
-        return false;
     }
 
     /**
@@ -249,5 +237,17 @@ class Period extends GlobalScope
         $query->macro('lastPeriod', function (Builder $query, $unit, $column = null) {
             return $query->periods($unit, -1, $column, false);
         });
+    }
+
+    /**
+     * Remove the scope from given Eloquent query builder.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder $query
+     * @param  \Illuminate\Database\Eloquent\Model $model
+     * @return void
+     */
+    public function remove(Builder $query, Model $model)
+    {
+        // We don't need it, just to satisfy the interface.
     }
 }
